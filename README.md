@@ -61,8 +61,15 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 
 额外做：装到 `C:\Program Files\FaceGuard`、注册开机任务 `FaceGuard Watch`、开启登录失败审核（4625）、注册登录提示任务。
 
-### 卸载
+### 没有 ffmpeg？（DirectShow 取不到帧时才需要）
 
+```powershell
+powershell -ExecutionPolicy Bypass -File .\get-ffmpeg.ps1
+```
+
+脚本会下载官方静态构建（约 80–120 MB）并解压出 `bin\ffmpeg.exe`；也可以把任意 `ffmpeg.exe` 直接放进 `bin\`，或用 `-Url` 指向本地压缩包/镜像。
+
+### 卸载
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\uninstall.ps1          # 保留照片
 powershell -ExecutionPolicy Bypass -File .\uninstall.ps1 -Purge   # 连照片一起删
@@ -198,6 +205,7 @@ src/Log.cs        日志
 install.ps1       安装（用户模式 / 系统模式）
 uninstall.ps1     卸载
 build.ps1         编译（csc，无 NuGet）
+get-ffmpeg.ps1    下载 ffmpeg 到 bin\（可选，DirectShow 取不到帧时用）
 ```
 
 ---

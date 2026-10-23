@@ -82,7 +82,7 @@ function Install-User {
         Write-Host ("已内置 ffmpeg: " + $ff)
     }
     else {
-        Write-Warning "未找到 ffmpeg.exe。若 DirectShow 取流失败，将无法拍照；可用 -FfmpegPath 指定。"
+        Write-Warning "未找到 ffmpeg.exe。若 DirectShow 取流失败，将无法拍照；可先运行 get-ffmpeg.ps1 自动下载，或用 -FfmpegPath 指定。"
     }
 
     $shots = Set-ShotsDir (Join-Path $dest 'FaceGuard.exe')
@@ -125,7 +125,7 @@ function Install-System {
         Write-Host ("已内置 ffmpeg: " + $ff)
     }
     else {
-        Write-Warning "未找到 ffmpeg.exe。若 DirectShow 取流失败，将无法拍照；可用 -FfmpegPath 指定。"
+        Write-Warning "未找到 ffmpeg.exe。若 DirectShow 取流失败，将无法拍照；可先运行 get-ffmpeg.ps1 自动下载，或用 -FfmpegPath 指定。"
     }
 
     # 数据目录：只允许 SYSTEM / 管理员 / 当前用户
