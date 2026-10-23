@@ -1,0 +1,18 @@
+# 编译产物
+bin/
+*.exe
+*.pdb
+*.dll
+
+# 运行时数据（照片、日志、配置、事件）
+data/
+captures/
+*.log
+*.jsonl
+config.ini
+
+# 调试/临时
+.vs/
+obj/
+*.user
+*.suo
