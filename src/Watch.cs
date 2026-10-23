@@ -345,8 +345,8 @@ namespace FaceGuard
 
         private void ShowStartupToast()
         {
-            // 开机/登录后的第一张：记录刚登录进来的人（登录界面本身的覆盖需要系统模式）
-            _w.Trigger("logon", 1, true);
+            // 登录后的第一张：同一开机周期只拍一次（手动重启守护进程不会重复拍）
+            if (Health.ShouldLogonCapture()) _w.Trigger("logon", 1, true);
 
             if (!Store.Cfg.StartupToast) return;
             string err = Health.Check();

@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace FaceGuard
@@ -8,6 +10,35 @@ namespace FaceGuard
     /// <summary>启动自检：只看目录是否可写、有没有摄像头、取流组件在不在，不打开摄像头。</summary>
     internal static class Health
     {
+        [DllImport("kernel32.dll")]
+        private static extern ulong GetTickCount64();
+
+        /// <summary>
+        /// 只有"本次开机周期内的第一次启动"才拍登录首拍。
+        /// 手动重启守护进程（同一开机周期）不会重复拍。
+        /// </summary>
+        public static bool ShouldLogonCapture()
+        {
+            try
+            {
+                DateTime boot = DateTime.UtcNow.AddMilliseconds(-(double)GetTickCount64());
+                string p = Path.Combine(Store.StateDir, "lastboot.txt");
+
+                if (File.Exists(p))
+                {
+                    DateTime prev;
+                    string raw = File.ReadAllText(p).Trim();
+                    if (DateTime.TryParse(raw, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out prev))
+                    {
+                        if (Math.Abs((boot - prev).TotalMinutes) < 5) return false;
+                    }
+                }
+                File.WriteAllText(p, boot.ToString("o", CultureInfo.InvariantCulture));
+                return true;
+            }
+            catch { return true; }
+        }
+
         public static string Check()
         {
             try
