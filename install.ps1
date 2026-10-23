@@ -68,6 +68,11 @@ function Set-ShotsDir([string]$Exe) {
 # ---------------------------------------------------------------- 用户模式
 function Install-User {
     $dest = Join-Path $env:LOCALAPPDATA 'Programs\FaceGuard'
+
+    # 先停掉正在运行的守护进程，否则 exe 被占用会复制失败
+    Get-Process FaceGuardDaemon -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Milliseconds 600
+
     New-Item -ItemType Directory -Force $dest | Out-Null
     Copy-Item (Join-Path $binSrc '*') $dest -Force -Recurse
 
@@ -87,8 +92,6 @@ function Install-User {
     $lnk = Join-Path $startup 'FaceGuard 守护.lnk'
     New-Shortcut $lnk (Join-Path $dest 'FaceGuardDaemon.exe') 'agent' $dest
 
-    Get-Process FaceGuardDaemon -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Milliseconds 300
     Start-Process -FilePath (Join-Path $dest 'FaceGuardDaemon.exe') -ArgumentList 'agent' -WorkingDirectory $dest
 
     Write-Host ""
@@ -108,6 +111,11 @@ function Install-System {
     }
 
     $dest = Join-Path $env:ProgramFiles 'FaceGuard'
+
+    # 先停掉正在运行的守护进程，否则 exe 被占用会复制失败
+    Get-Process FaceGuardDaemon -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Milliseconds 600
+
     New-Item -ItemType Directory -Force $dest | Out-Null
     Copy-Item (Join-Path $binSrc '*') $dest -Force -Recurse
 
@@ -190,8 +198,6 @@ function Install-System {
         Write-Warning ("登录提示任务注册失败（不影响拍摄）: " + $_.Exception.Message)
     }
 
-    Get-Process FaceGuardDaemon -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Milliseconds 300
     Start-ScheduledTask -TaskName $taskName
     Start-Sleep -Seconds 2
 
