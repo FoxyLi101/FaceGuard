@@ -11,6 +11,28 @@ captures/
 *.jsonl
 config.ini
 
+# 个人信息防线：照片 / 视频 / 录音 / 压缩包默认不进仓库
+# （确实需要提交截图时用：git add -f 文件名）
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+*.webp
+*.heic
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.m4a
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+
 # 调试/临时
 .vs/
 obj/
